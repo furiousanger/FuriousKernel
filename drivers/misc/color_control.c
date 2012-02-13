@@ -11,6 +11,7 @@
 #include <linux/device.h>
 #include <linux/miscdevice.h>
 
+<<<<<<< HEAD
 #define COLORCONTROL_VERSION 4
 
 extern void colorcontrol_update(bool multiplier_updated);
@@ -55,6 +56,40 @@ static ssize_t colorcontrol_offset_write(struct device * dev, struct device_attr
     int new_offset[3];
 
     if(sscanf(buf, "%i %i %i\n", &new_offset[0], &new_offset[1], &new_offset[2]) == 3) 
+=======
+#define COLORCONTROL_VERSION 2
+
+extern void colorcontrol_update(bool multiplier_updated);
+
+static int * v1_offset;
+
+static u32 * color_multiplier;
+
+void colorcontrol_register_offset(int * offset)
+{
+    v1_offset = offset;
+
+    return;
+}
+EXPORT_SYMBOL(colorcontrol_register_offset);
+
+void colorcontrol_register_multiplier(u32 * multiplier)
+{
+    color_multiplier = multiplier;
+
+    return;
+}
+EXPORT_SYMBOL(colorcontrol_register_multiplier);
+
+static ssize_t colorcontrol_offset_read(struct device * dev, struct device_attribute * attr, char * buf)
+{
+    return sprintf(buf, "%i %i %i\n", v1_offset[0], v1_offset[1], v1_offset[2]);
+}
+
+static ssize_t colorcontrol_offset_write(struct device * dev, struct device_attribute * attr, const char * buf, size_t size)
+{
+    if(sscanf(buf, "%i %i %i\n", &v1_offset[0], &v1_offset[1], &v1_offset[2]) == 3) 
+>>>>>>> e4c47de... Added support for changing the color multipliers.
 	{
 	    for (i = 0; i < 3; i++)
 		v1_offset[i] = new_offset[i];
@@ -78,6 +113,7 @@ static ssize_t colorcontrol_multiplier_read(struct device * dev, struct device_a
 
 static ssize_t colorcontrol_multiplier_write(struct device * dev, struct device_attribute * attr, const char * buf, size_t size)
 {
+<<<<<<< HEAD
     int i;
 
     u32 new_multiplier[3];
@@ -92,6 +128,10 @@ static ssize_t colorcontrol_multiplier_write(struct device * dev, struct device_
 			color_multiplier[i] = new_multiplier[i];
 		}
 
+=======
+    if(sscanf(buf, "%u %u %u\n", &color_multiplier[0], &color_multiplier[1], &color_multiplier[2]) == 3) 
+	{
+>>>>>>> e4c47de... Added support for changing the color multipliers.
 	    pr_info("COLORCONTROL color multipliers changed\n");
 
 	    colorcontrol_update(true);
@@ -171,16 +211,22 @@ static ssize_t colorcontrol_version(struct device * dev, struct device_attribute
 
 static DEVICE_ATTR(v1_offset, S_IRUGO | S_IWUGO, colorcontrol_offset_read, colorcontrol_offset_write);
 static DEVICE_ATTR(multiplier, S_IRUGO | S_IWUGO, colorcontrol_multiplier_read, colorcontrol_multiplier_write);
+<<<<<<< HEAD
 static DEVICE_ATTR(safety_enabled, S_IRUGO | S_IWUGO, colorcontrol_safety_read, colorcontrol_safety_write);
 static DEVICE_ATTR(original_multiplier, S_IRUGO, colorcontrol_originalmultiplier_read, NULL);
+=======
+>>>>>>> e4c47de... Added support for changing the color multipliers.
 static DEVICE_ATTR(version, S_IRUGO , colorcontrol_version, NULL);
 
 static struct attribute *colorcontrol_attributes[] = 
     {
 	&dev_attr_v1_offset.attr,
 	&dev_attr_multiplier.attr,
+<<<<<<< HEAD
 	&dev_attr_safety_enabled.attr,
 	&dev_attr_original_multiplier.attr,
+=======
+>>>>>>> e4c47de... Added support for changing the color multipliers.
 	&dev_attr_version.attr,
 	NULL
     };
