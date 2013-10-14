@@ -76,6 +76,7 @@ GRTAGS
 GSYMS
 GTAGS
 
+arch/arm/boot/compressed/ashldi3.S
 *.orig
 *~
 \#*#
